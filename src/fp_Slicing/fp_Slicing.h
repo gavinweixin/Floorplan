@@ -3,7 +3,6 @@
 
 #include "NPE.h"
 
-void Stockmeyer(NPE &);
-void SA(NPE &);
+
 
 #endif

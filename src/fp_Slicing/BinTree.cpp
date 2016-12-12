@@ -1,4 +1,4 @@
-// #include <stack>
+#include <stack>
 #include "BinTree.h"
 
 using namespace std;
@@ -8,6 +8,31 @@ BinTree<T>::BinTree() { }
 
 template<class T>
 BinTree<T>::BinTree(const BinTree<T> &orig) : root(orig.root) { }
+
+template<class T>
+BinTree<T>::BinTree(const string& orig)
+{
+    int lptr = 0, rptr;
+    BinNode *node;
+    string str = orig + ",";
+    stack<BinNode*> myStack;
+
+    while ((rptr=str.find(',',lptr))!=string::npos)
+    {
+        node = new(BinNode);
+        node->flag = substr(lptr,rptr-lptr);
+        if (node->flag=="H" || node->flag=="V")
+        {
+            node->rchild = myStack.top();
+            myStack.pop();
+            node->lchild = myStack.top();
+            myStack.pop();
+        }
+        myStack.push(node);
+    }
+
+    root = myStack.top();
+}
 
 template<class T>
 BinTree<T>::~BinTree()

@@ -1,18 +1,23 @@
-#include <string>
 #include "NPE.h"
 
 using namespace std;
 
-NPE::NPE() { }
+template<class T>
+NPE<T>::NPE() { }
 
-NPE::NPE(const NPE &orig) : s(orig.s) { }
+template<class T>
+NPE<T>::NPE(const NPE<T> &orig) : root(orig.root), s(orig.s) { }
 
-NPE::NPE(const string& orig) : s(orig) { }
+template<class T>
+NPE<T>::NPE(const string& orig) : BinTree(orig), s(orig) { }
 
-NPE::~NPE() { }
+template<class T>
+NPE<T>::~NPE() { }
 
-NPE& NPE::operator = (const NPE& i)
+template<class T>
+NPE<T>& NPE<T>::operator = (const NPE<T>& i)
 {
     s = i.s;
+    root = i.root;
     return *this;
 }
