@@ -1,14 +1,17 @@
+#include <string>
 #include "NPE.h"
 
-NPE :: NPE() { }
+using namespace std;
 
-NPE :: NPE(const NPE &orig) : s(orig.s) { }
+NPE::NPE() { }
 
-NPE :: NPE(const string& orig) : s(orig) { }
+NPE::NPE(const NPE &orig) : s(orig.s) { }
 
-NPE :: ~NPE() { }
+NPE::NPE(const string& orig) : s(orig) { }
 
-NPE& NPE :: operator = (const NPE& i)
+NPE::~NPE() { }
+
+NPE& NPE::operator = (const NPE& i)
 {
     s = i.s;
     return *this;

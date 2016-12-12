@@ -1,17 +1,17 @@
 #ifndef _NPE_H_
 #define _NPE_H_
 
-#include <string>
-
-using namespace std;
-
-typedef enum
+namespace sliceDir
 {
-    H = -2,     // horizontal slicing
-    V = -1      // vertical slicing
-} sliceDir;
+    enum sliceDir_
+    {
+        H = -2,     // horizontal slicing
+        V = -1      // vertical slicing
+    };
+}
+typedef sliceDir::sliceDir_ sliceDir;
 
-class NPE
+class NPE : private BinTree
 {
 public:
     NPE();
