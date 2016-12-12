@@ -2,6 +2,9 @@
 #define _NPE_H_
 
 #include <string>
+#include "BinTree.h"
+
+using std::string;
 
 // namespace sliceDir
 // {
@@ -23,12 +26,13 @@ public:
     ~NPE();
     NPE<T>& operator = (const NPE<T>& i);
 
+	BinNode<T>* getRoot() const;
     // void set_pi(int i, const Interval &value);
     // int judge(double, bool=true) const;
 
 private:
     string s;
 
-}
+};
 
 #endif

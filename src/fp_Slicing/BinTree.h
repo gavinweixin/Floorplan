@@ -2,6 +2,7 @@
 #define _BINTREE_H_
 
 #include <string>
+using std::string;
 
 template <class T>
 struct BinNode
@@ -21,13 +22,13 @@ public:
     ~BinTree();
     BinTree<T>& operator = (const BinTree<T>& i);
 
-    BinNode<T>* getRoot();
+    BinNode<T>* getRoot() const;
 
 protected:
     BinNode<T> *root;
 
 private:
     void destruct(BinNode<T> *node);
-}
+};
 
 #endif

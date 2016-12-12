@@ -48,7 +48,7 @@ BinTree<T>& BinTree<T>::operator = (const BinTree<T>& i)
 }
 
 template<class T>
-BinNode<T>* BinTree<T>::getRoot()
+BinNode<T>* BinTree<T>::getRoot() const
 {
     return root;
 }
