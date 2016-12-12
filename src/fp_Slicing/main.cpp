@@ -7,8 +7,8 @@
 
 using namespace std;
 
-typedef map<string, pair<int,int>> myMap;
-typedef vector<pair<int,int>> Stockmeyer_Datatype;
+typedef map< string, pair<int,int> > myMap;
+typedef vector< pair<int,int> > Stockmeyer_Datatype;
 
 void init(string &, myMap &);
 void Stockmeyer(BinNode<Stockmeyer_Datatype> *, myMap &);

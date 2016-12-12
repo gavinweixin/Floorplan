@@ -4,7 +4,7 @@
 using namespace std;
 
 template<class T>
-BinTree<T>::BinTree() { }
+BinTree<T>::BinTree() : root(NULL) { }
 
 template<class T>
 BinTree<T>::BinTree(const BinTree<T> &orig) : root(orig.root) { }

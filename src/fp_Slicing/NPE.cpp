@@ -3,13 +3,13 @@
 using namespace std;
 
 template<class T>
-NPE<T>::NPE() { }
+NPE<T>::NPE() : s("") { }
 
 template<class T>
-NPE<T>::NPE(const NPE<T> &orig) : root(orig.root), s(orig.s) { }
+NPE<T>::NPE(const NPE<T> &orig) : s(orig.s), root(orig.root) { }
 
 template<class T>
-NPE<T>::NPE(const string& orig) : BinTree<T>(orig), s(orig) { }
+NPE<T>::NPE(const string& orig) : s(orig), BinTree<T>(orig) { }
 
 template<class T>
 NPE<T>::~NPE() { }
