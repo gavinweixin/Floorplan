@@ -4,9 +4,8 @@
 #include <string>
 #include "BinTree.h"
 
-using namespace std;
-//using std::string;
-
+typedef pair<size_t,size_t> BlockSize;
+typedef map<string, BlockSize> BlockSizeMap;
 // namespace sliceDir
 // {
 //     enum sliceDir_
@@ -17,50 +16,33 @@ using namespace std;
 // }
 // typedef sliceDir::sliceDir_ sliceDir;
 
-template<class T>
-class NPE : public BinTree<T>
+class NPE : public BinTree<BlockSize>
 {
 public:
     NPE();
-    NPE(const NPE<T>& orig);
-    NPE(const string& orig);
+    NPE(const NPE& orig);
+    NPE(const vector<string>&, const BlockSizeMap&);
+    NPE(const string&, const BlockSizeMap&); // input: postorder traversal divided by comma(,)
     ~NPE();
-    NPE<T>& operator = (const NPE<T>& i);
+    NPE& operator = (const NPE& i);
 
-	BinNode<T>* getRoot() const;
-    // void set_pi(int i, const Interval &value);
-    // int judge(double, bool=true) const;
+	BinNode<BlockSize>* getRoot() const;
+    vector<string> getPostOrder() const;
+
+    size_t getArea() const;
+
+    vector<string> M1(size_t startPos) const;
+    vector<string> M2(size_t startPos) const;
+    vector<string> M3(size_t startPos) const;
 
 private:
-    string s;
+    bool isLeaf(const string&) const;
+    bool isLegalNPE(const vector<string>&) const;
+    void merge(const BinNode<BlockSize>*);
+
+    // BlockSizeMap basicSize;
 
 };
 
-template<class T>
-NPE<T>::NPE() : s("") { }
-
-template<class T>
-NPE<T>::NPE(const NPE<T> &orig) : BinTree<T>(orig), s(orig.s) { }
-
-template<class T>
-NPE<T>::NPE(const string& orig) : BinTree<T>(orig), s(orig) { }
-
-template<class T>
-NPE<T>::~NPE() { }
-
-template<class T>
-NPE<T>& NPE<T>::operator = (const NPE<T>& i)
-{
-    s = i.s;
-//    BinTree<T>::root = i.root; //????
-    setRoot(i.root);
-    return *this;
-}
-
-template<class T>
-BinNode<T>* NPE<T>::getRoot() const
-{
-    return BinTree<T>::getRoot();
-}
 
 #endif

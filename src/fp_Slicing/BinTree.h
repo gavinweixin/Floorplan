@@ -2,8 +2,8 @@
 #define _BINTREE_H_
 
 #include <string>
-#include <stack>
-//using std::string;
+#include <vector>
+
 using namespace std;
 
 template <class T>
@@ -20,15 +20,17 @@ class BinTree
 public:
     BinTree();
     BinTree(const BinTree<T>& orig);
-    BinTree(const string& orig);        // input: postorder traversal divided by comma(,)
     ~BinTree();
     BinTree<T>& operator = (const BinTree<T>& i);
 
-    void setRoot(BinNode<T>*);
+    void setRoot(const BinNode<T>*);
+    void setPostOrder(const vector<string>&);
     BinNode<T>* getRoot() const;
+    vector<string> getPostOrder() const;
 
 protected:
     BinNode<T> *root;
+    vector<string> postOrder;
 
 private:
     void destruct(BinNode<T> *node);
@@ -38,34 +40,8 @@ template<class T>
 BinTree<T>::BinTree() : root(NULL) { }
 
 template<class T>
-BinTree<T>::BinTree(const BinTree<T> &orig) : root(orig.root) { }
-
-template<class T>
-BinTree<T>::BinTree(const string& orig)
-{
-    size_t lptr = 0, rptr;
-    BinNode<T> *node;
-    string str = orig + ",";
-    stack<BinNode<T>*> myStack;
-
-    while ((rptr=str.find(',',lptr))!=string::npos)
-    {
-        node = new(BinNode<T>);
-        node->flag = str.substr(lptr,rptr-lptr);
-		node->lchild = node->rchild = NULL;
-        if (node->flag=="H" || node->flag=="V")
-        {
-            node->rchild = myStack.top();
-            myStack.pop();
-            node->lchild = myStack.top();
-            myStack.pop();
-        }
-        myStack.push(node);
-		lptr = rptr + 1;
-    }
-
-    root = myStack.top();
-}
+BinTree<T>::BinTree(const BinTree<T> &orig)
+    : root(orig.root), postOrder(orig.postOrder) { }
 
 template<class T>
 BinTree<T>::~BinTree()
@@ -77,19 +53,32 @@ template<class T>
 BinTree<T>& BinTree<T>::operator = (const BinTree<T>& i)
 {
     root = i.root;
+    postOrder = i.postOrder;
     return *this;
 }
 
 template<class T>
-void BinTree<T>::setRoot(BinNode<T>* node)
+void BinTree<T>::setRoot(const BinNode<T>* node)
 {
     root = node;
+}
+
+template<class T>
+void BinTree<T>::setPostOrder(const vector<string> &tra)
+{
+    postOrder = tra;
 }
 
 template<class T>
 BinNode<T>* BinTree<T>::getRoot() const
 {
     return root;
+}
+
+template<class T>
+vector<string> BinTree<T>::getPostOrder() const
+{
+    return postOrder;
 }
 
 template<class T>
