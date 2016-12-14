@@ -1,12 +1,13 @@
 #include <stack>
+#include <algorithm>
 #include "NPE.h"
 
 using namespace std;
 
-NPE::NPE() : BinTree<BlockSize>() : area(0) { }
+NPE::NPE() : BinTree<BlockSize>(), area(0) { }
 
 NPE::NPE(const NPE &orig)
-    : BinTree<BlockSize>(orig), area(orig.area),  basicSize(orig.basicSize) { }
+    : BinTree<BlockSize>(orig), area(orig.area), basicSize(orig.basicSize) { }
 
 NPE::NPE(const vector<string>& tra, const BlockSizeMap& basicSize)
 {
@@ -33,7 +34,7 @@ NPE::NPE(const vector<string>& tra, const BlockSizeMap& basicSize)
 
     setRoot(myStack.top());
     setPostOrder(tra);
-    this.basicSize = basicSize;
+    this->basicSize = basicSize;
     area = 0;
 }
 
@@ -76,7 +77,7 @@ size_t NPE::getN() const
     return BinTree<BlockSize>::getNumLeaf();
 }
 
-size_t NPE::getArea() const
+size_t NPE::getArea()
 {
     if (area == 0)
     {
@@ -153,7 +154,7 @@ NPE NPE::M3(size_t startPos) const
                 result = postOrder;
                 result[pos] = postOrder[pos+1];
                 result[pos+1] = postOrder[pos];
-                if isLegalNPE(result)
+                if (isLegalNPE(result))
                     break;
                 else
                     result.clear();
@@ -167,12 +168,12 @@ NPE NPE::M3(size_t startPos) const
     //     return NPE();
 }
 
-bool NPE::isLeaf(const string& str) const;
+bool NPE::isLeaf(const string& str) const
 {
     return (str!="H" && str!="V");
 }
 
-bool isLegalNPE(const vector<string>& npe) const
+bool NPE::isLegalNPE(const vector<string>& npe) const
 {
     size_t numOperand = 0;
     for (size_t i=0; i<npe.size(); i++)
@@ -191,7 +192,7 @@ bool isLegalNPE(const vector<string>& npe) const
     return true;
 }
 
-void NPE::merge(const BinNode<BlockSize>* node)
+void NPE::merge(BinNode<BlockSize>* node)
 {
     if (node->flag!="H" && node->flag!="V") return;
 

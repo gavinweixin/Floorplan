@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+
 //#include <sstream>
 #include "NPE.h"
 
@@ -11,7 +12,7 @@
 using namespace std;
 
 NPE init();
-void Stockmeyer(BinNode<BlockSize> *);
+vector<BlockSize> Stockmeyer(BinNode<BlockSize> *);
 NPE SA(NPE &);
 
 int main()
@@ -41,8 +42,8 @@ int main()
     cout << "The optimized floorplan is "
          << optimized.getPostOrderStr() << endl;
     cout << "Aera: "
-         << (optimized.getRoot())->first << "*" << (optimized.getRoot())->second
-         << "=" << (optimized.getRoot())->first*(optimized.getRoot())->second
+         << (optimized.getRoot())->data.first << "*" << (optimized.getRoot())->data.second
+         << "=" << (optimized.getRoot())->data.first*(optimized.getRoot())->data.second
          << endl;
 
     return 0;
@@ -51,7 +52,8 @@ int main()
 NPE init()
 {
     size_t n, w, h;
-	ifstream inFile("D:\\OneDrive\\Repository\\Floorplan\\testdata\\test1.in");
+	string str;
+	ifstream inFile("D:\\Sync\\Repository\\Floorplan\\testdata\\test1.in");
 
     // # of blocks
     inFile >> n;
@@ -138,7 +140,7 @@ NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
     size_t M, MT, uphill;
     size_t startPos, delta;
 
-    while ((double)reject/MT<0.95 && T>freezingPoint)
+    while ((double)reject/MT<0.95 && T>freezingPoint) //????
     {
         MT = uphill = reject = 0;
         while (uphill<N && MT<2*N)
