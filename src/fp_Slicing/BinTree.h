@@ -27,6 +27,7 @@ public:
     void setPostOrder(const vector<string>&);
     BinNode<T>* getRoot() const;
     vector<string> getPostOrder() const;
+    size_t getNumLeaf() const;
 
 protected:
     BinNode<T> *root;
@@ -79,6 +80,12 @@ template<class T>
 vector<string> BinTree<T>::getPostOrder() const
 {
     return postOrder;
+}
+
+template<class T>
+size_t BinTree<T>::getNumLeaf() const
+{
+    return (postOrder.size()+1)/2;
 }
 
 template<class T>

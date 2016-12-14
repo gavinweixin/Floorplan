@@ -26,21 +26,22 @@ public:
     ~NPE();
     NPE& operator = (const NPE& i);
 
-	BinNode<BlockSize>* getRoot() const;
-    vector<string> getPostOrder() const;
-
+	// BinNode<BlockSize>* getRoot() const;
+    // vector<string> getPostOrder() const;
+    size_t getN() const;
     size_t getArea() const;
 
-    vector<string> M1(size_t startPos) const;
-    vector<string> M2(size_t startPos) const;
-    vector<string> M3(size_t startPos) const;
+    NPE M1(size_t startPos) const;
+    NPE M2(size_t startPos) const;
+    NPE M3(size_t startPos) const;
 
 private:
     bool isLeaf(const string&) const;
     bool isLegalNPE(const vector<string>&) const;
     void merge(const BinNode<BlockSize>*);
 
-    // BlockSizeMap basicSize;
+    size_t area;
+    BlockSizeMap basicSize;
 
 };
 

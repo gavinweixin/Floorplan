@@ -3,9 +3,10 @@
 
 using namespace std;
 
-NPE::NPE() : BinTree<BlockSize>() { }
+NPE::NPE() : BinTree<BlockSize>() : area(0) { }
 
-NPE::NPE(const NPE &orig) : BinTree<BlockSize>(orig) { }
+NPE::NPE(const NPE &orig)
+    : BinTree<BlockSize>(orig), area(orig.area),  basicSize(orig.basicSize) { }
 
 NPE::NPE(const vector<string>& tra, const BlockSizeMap& basicSize)
 {
@@ -32,6 +33,8 @@ NPE::NPE(const vector<string>& tra, const BlockSizeMap& basicSize)
 
     setRoot(myStack.top());
     setPostOrder(tra);
+    this.basicSize = basicSize;
+    area = 0;
 }
 
 NPE::NPE(const string& tra, const BlockSizeMap& basicSize)
@@ -58,23 +61,32 @@ NPE& NPE::operator = (const NPE& i)
     return *this;
 }
 
-BinNode<BlockSize>* NPE::getRoot() const
-{
-    return BinTree<BlockSize>::getRoot();
-}
+// BinNode<BlockSize>* NPE::getRoot() const
+// {
+//     return BinTree<BlockSize>::getRoot();
+// }
+//
+// vector<string> NPE::getPostOrder() const
+// {
+//     return BinTree<BlockSize>::getPostOrder();
+// }
 
-vector<string> NPE::getPostOrder() const
+size_t NPE::getN() const
 {
-    return BinTree<BlockSize>::getPostOrder();
+    return BinTree<BlockSize>::getNumLeaf();
 }
 
 size_t NPE::getArea() const
 {
-    merge(getRoot());
-    return (getRoot()->data.first * getRoot()->data.second);
+    if (area == 0)
+    {
+        merge(getRoot());
+        area = getRoot()->data.first * getRoot()->data.second;
+    }
+    return area;
 }
 
-vector<string> NPE::M1(size_t startPos) const
+NPE NPE::M1(size_t startPos) const
 {
     vector<string> result;
     size_t pos = startPos;
@@ -92,10 +104,13 @@ vector<string> NPE::M1(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    return result;
+    // if (result.size())
+        return NPE(result, basicSize);
+    // else
+    //     return NPE();
 }
 
-vector<string> NPE::M2(size_t startPos) const
+NPE NPE::M2(size_t startPos) const
 {
     vector<string> result;
     size_t pos = startPos;
@@ -120,10 +135,13 @@ vector<string> NPE::M2(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    return result;
+    // if (result.size())
+        return NPE(result, basicSize);
+    // else
+    //     return NPE();
 }
 
-vector<string> NPE::M3(size_t startPos) const
+NPE NPE::M3(size_t startPos) const
 {
     vector<string> result;
     size_t pos = startPos;
@@ -143,7 +161,10 @@ vector<string> NPE::M3(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    return result;
+    // if (result.size())
+        return NPE(result, basicSize);
+    // else
+    //     return NPE();
 }
 
 bool NPE::isLeaf(const string& str) const;

@@ -6,21 +6,20 @@
 //#include <sstream>
 #include "NPE.h"
 
+// #define RAND_MAX 0x7fff
+
 using namespace std;
 
-void init(NPE &, BlockSizeMap &);
+NPE init();
 void Stockmeyer(BinNode<BlockSize> *);
-void SA(NPE &, BlockSizeMap &);
+NPE SA(NPE &);
 
 int main()
 {
 
-    BlockSizeMap basicSize;
-
-    init(str, basicSize);
+    NPE npe = init();
 
     // Stockmeyer
-    NPE npe(str, basicSize);
     size_t min_area = 0x7fffffff;
     vector<BlockSize> result = Stockmeyer(npe.getRoot());
     vector<BlockSize>::iterator t, i;
@@ -35,12 +34,21 @@ int main()
          << "=" << min_area << endl;
 
     // Simulated Annealing
-    SA(str, basicSize);
+    double freezingPoint = 1e-100;
+    double r = 0.85;
+    size_t k = 10; // k <- 5~10 suggested
+    NPE optimized = SA(npe, freezingPoint, r, k);
+    cout << "The optimized floorplan is "
+         << optimized.getPostOrderStr() << endl;
+    cout << "Aera: "
+         << (optimized.getRoot())->first << "*" << (optimized.getRoot())->second
+         << "=" << (optimized.getRoot())->first*(optimized.getRoot())->second
+         << endl;
 
     return 0;
 }
 
-void init(string &str, BlockSizeMap &basicSize)
+NPE init()
 {
     size_t n, w, h;
 	ifstream inFile("D:\\OneDrive\\Repository\\Floorplan\\testdata\\test1.in");
@@ -60,6 +68,8 @@ void init(string &str, BlockSizeMap &basicSize)
     // initial design
 	inFile >> str;
 	inFile.close();
+
+    return NPE(str, basicSize);
 }
 
 
@@ -119,7 +129,46 @@ vector<BlockSize> Stockmeyer(BinNode<BlockSize> *node)
     return result;
 }
 
-void SA(string &str, BlockSizeMap &basicSize)
+NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
 {
+    NPE best(npe), E(npe), NE;
+    size_t n = npe.getN();
+    size_t N = k*n;
+    double T = 1e4;
+    size_t M, MT, uphill;
+    size_t startPos, delta;
 
+    while ((double)reject/MT<0.95 && T>freezingPoint)
+    {
+        MT = uphill = reject = 0;
+        while (uphill<N && MT<2*N)
+        {
+            M = rand() % 3 + 1;
+            startPos = rand() % n;
+            switch (M)
+            {
+            case 1: NE = E.M1(startPos); break;
+            case 2: NE = E.M2(startPos); break;
+            case 3: NE = E.M3(startPos); break;
+            default:
+            }
+
+            // selected kind of move not feasible
+            // if (!NE.getN()) continue;
+
+            MT++;
+            delta = NE.getArea() - E.getArea();
+            if (delta<=0 || (double)rand()/RAND_MAX < exp(-delta/T))
+            {
+                if (delta > 0) uphill++;
+                E = NE;
+                if (E.getArea() < best.getArea())
+                    best = E;
+            }
+            else reject++;
+        }
+        T = r * T;
+    }
+
+    return best;
 }
