@@ -23,10 +23,11 @@ public:
     ~BinTree();
     BinTree<T>& operator = (const BinTree<T>& i);
 
-    void setRoot(const BinNode<T>*);
+    void setRoot(BinNode<T>*);
     void setPostOrder(const vector<string>&);
     BinNode<T>* getRoot() const;
     vector<string> getPostOrder() const;
+	string getPostOrderStr() const;
     size_t getNumLeaf() const;
 
 protected:
@@ -34,6 +35,7 @@ protected:
     vector<string> postOrder;
 
 private:
+	BinNode<T>* copy(const BinNode<T> *);
     void destruct(BinNode<T> *node);
 };
 
@@ -42,7 +44,25 @@ BinTree<T>::BinTree() : root(NULL) { }
 
 template<class T>
 BinTree<T>::BinTree(const BinTree<T> &orig)
-    : root(orig.root), postOrder(orig.postOrder) { }
+    : postOrder(orig.postOrder)
+{
+	root = copy(orig.root);
+}
+
+
+template<class T>
+BinNode<T>* BinTree<T>::copy(const BinNode<T> *src)
+{
+	if (src == NULL) return NULL;
+
+	BinNode<T>* node = new(BinNode<BlockSize>);
+	node->data = src->data;
+	node->flag = src->flag;
+	node->lchild = copy(src->lchild);
+	node->rchild = copy(src->rchild);
+
+	return node;
+}
 
 template<class T>
 BinTree<T>::~BinTree()
@@ -53,15 +73,15 @@ BinTree<T>::~BinTree()
 template<class T>
 BinTree<T>& BinTree<T>::operator = (const BinTree<T>& i)
 {
-    root = i.root;
+    root = copy(i.root);
     postOrder = i.postOrder;
     return *this;
 }
 
 template<class T>
-void BinTree<T>::setRoot(const BinNode<T>* node)
+void BinTree<T>::setRoot(BinNode<T>* node)
 {
-    root = node;
+    root = copy(node);
 }
 
 template<class T>
@@ -80,6 +100,15 @@ template<class T>
 vector<string> BinTree<T>::getPostOrder() const
 {
     return postOrder;
+}
+
+template<class T>
+string BinTree<T>::getPostOrderStr() const
+{
+	string tra = postOrder[0];
+	for (size_t i = 1; i < postOrder.size(); i++)
+		tra = tra + "," + postOrder[i];
+	return tra;
 }
 
 template<class T>

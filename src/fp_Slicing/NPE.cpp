@@ -27,7 +27,7 @@ NPE::NPE(const vector<string>& tra, const BlockSizeMap& basicSize)
         } else
         {
             node->lchild = node->rchild = NULL;
-            node->data = basicSize[node->flag];
+            node->data = basicSize.at(node->flag);
         }
         myStack.push(node);
     }
@@ -59,6 +59,8 @@ NPE& NPE::operator = (const NPE& i)
 {
     setRoot(i.root);
     setPostOrder(i.postOrder);
+	area = i.area;
+	basicSize = i.basicSize;
     return *this;
 }
 
@@ -89,31 +91,31 @@ size_t NPE::getArea()
 
 NPE NPE::M1(size_t startPos) const
 {
-    vector<string> result;
+    vector<string> modified;
     size_t pos = startPos;
 
     do {
-        if (pos+2 < postOrder.size())
-            if (isLeaf(postOrder[pos]) && isLeaf(postOrder[pos+1])
-                && isLeaf(postOrder[pos+2]))
+        if (pos+1 < postOrder.size())
+            if (isLeaf(postOrder[pos]) && isLeaf(postOrder[pos+1]))
+                //&& isLeaf(postOrder[pos+2]))
             {
-                result = postOrder;
-                result[pos] = postOrder[pos+1];
-                result[pos+1] = postOrder[pos];
+                modified = postOrder;
+                modified[pos] = postOrder[pos+1];
+                modified[pos+1] = postOrder[pos];
                 break;
             }
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    // if (result.size())
-        return NPE(result, basicSize);
+    // if (modified.size())
+    return NPE(modified, basicSize);
     // else
     //     return NPE();
 }
 
 NPE NPE::M2(size_t startPos) const
 {
-    vector<string> result;
+    vector<string> modified;
     size_t pos = startPos;
 
     do {
@@ -121,13 +123,13 @@ NPE NPE::M2(size_t startPos) const
             if (pos>0 && isLeaf(postOrder[pos-1]))
                 if (pos+1<postOrder.size() && !isLeaf(postOrder[pos+1]))
                 {
-                    result = postOrder;
+                    modified = postOrder;
                     while (pos < postOrder.size())
                     {
-                        if (result[pos] == "H")
-                            result[pos] = "V";
-                        else if (result[pos] == "V")
-                            result[pos] = "H";
+                        if (modified[pos] == "H")
+                            modified[pos] = "V";
+                        else if (modified[pos] == "V")
+                            modified[pos] = "H";
                         else break;
                         pos++;
                     }
@@ -136,34 +138,34 @@ NPE NPE::M2(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    // if (result.size())
-        return NPE(result, basicSize);
+    // if (modified.size())
+    return NPE(modified, basicSize);
     // else
     //     return NPE();
 }
 
 NPE NPE::M3(size_t startPos) const
 {
-    vector<string> result;
+    vector<string> modified;
     size_t pos = startPos;
 
     do {
         if (pos+1 < postOrder.size())
             if (isLeaf(postOrder[pos])+isLeaf(postOrder[pos+1]) == 1)
             {
-                result = postOrder;
-                result[pos] = postOrder[pos+1];
-                result[pos+1] = postOrder[pos];
-                if (isLegalNPE(result))
+                modified = postOrder;
+                modified[pos] = postOrder[pos+1];
+                modified[pos+1] = postOrder[pos];
+                if (isLegalNPE(modified))
                     break;
                 else
-                    result.clear();
+                    modified.clear();
             }
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    // if (result.size())
-        return NPE(result, basicSize);
+    // if (modified.size())
+    return NPE(modified, basicSize);
     // else
     //     return NPE();
 }

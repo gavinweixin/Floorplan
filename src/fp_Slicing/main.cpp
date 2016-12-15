@@ -13,7 +13,7 @@ using namespace std;
 
 NPE init();
 vector<BlockSize> Stockmeyer(BinNode<BlockSize> *);
-NPE SA(NPE &);
+NPE SA(NPE &, double, double, size_t);
 
 int main()
 {
@@ -53,13 +53,14 @@ NPE init()
 {
     size_t n, w, h;
 	string str;
-	ifstream inFile("D:\\Sync\\Repository\\Floorplan\\testdata\\test1.in");
+	ifstream inFile("D:\\Sync\\Repository\\Floorplan\\testdata\\test2.in");
 
     // # of blocks
     inFile >> n;
 
     // size of blocks
     //stringstream ss;
+	BlockSizeMap basicSize;
     for (size_t i=0; i<n; i++)
     {
 		inFile >> w >> h;
@@ -137,10 +138,11 @@ NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
     size_t n = npe.getN();
     size_t N = k*n;
     double T = 1e4;
-    size_t M, MT, uphill;
-    size_t startPos, delta;
+    size_t M, MT=1, uphill, reject=0;
+    size_t startPos;
+	int delta;
 
-    while ((double)reject/MT<0.95 && T>freezingPoint) //????
+    while ((double)reject/MT<0.95 && T>freezingPoint)
     {
         MT = uphill = reject = 0;
         while (uphill<N && MT<2*N)
@@ -152,8 +154,8 @@ NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
             case 1: NE = E.M1(startPos); break;
             case 2: NE = E.M2(startPos); break;
             case 3: NE = E.M3(startPos); break;
-            default:
-            }
+			default:;
+			}
 
             // selected kind of move not feasible
             // if (!NE.getN()) continue;
@@ -164,8 +166,14 @@ NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
             {
                 if (delta > 0) uphill++;
                 E = NE;
-                if (E.getArea() < best.getArea())
-                    best = E;
+				if (E.getArea() < best.getArea())
+				{
+					cout << "better design: " << E.getPostOrderStr()
+						<< " area=" << (E.getRoot())->data.first << "*" << (E.getRoot())->data.second
+						<< "=" << (E.getRoot())->data.first*(E.getRoot())->data.second
+						<< endl;
+					best = E;
+				}
             }
             else reject++;
         }
