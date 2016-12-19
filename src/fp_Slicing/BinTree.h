@@ -54,7 +54,7 @@ BinNode<T>* BinTree<T>::copy(const BinNode<T> *src)
 {
 	if (src == NULL) return NULL;
 
-	BinNode<T>* node = new(BinNode<BlockSize>);
+	BinNode<T>* node = new(BinNode<T>);
 	node->data = src->data;
 	node->flag = src->flag;
 	node->lchild = copy(src->lchild);
