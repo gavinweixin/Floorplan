@@ -19,8 +19,6 @@ public:
     ~NPE();
     NPE& operator = (const NPE& i);
 
-	// BinNode<BlockSize>* getRoot() const;
-    // vector<string> getPostOrder() const;
     size_t getN() const;
     size_t getArea();
 
@@ -35,8 +33,6 @@ private:
 
     size_t area;
     BlockSizeMap basicSize;
-
 };
-
 
 #endif

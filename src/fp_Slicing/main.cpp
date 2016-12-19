@@ -3,22 +3,23 @@
 #include <map>
 #include <vector>
 #include <algorithm>
-
-//#include <sstream>
 #include "NPE.h"
-
-// #define RAND_MAX 0x7fff
 
 using namespace std;
 
-NPE init();
+NPE init(char *);
 vector<BlockSize> Stockmeyer(BinNode<BlockSize> *);
 NPE SA(NPE &, double, double, size_t);
 
-int main()
+int main(int argc, char* argv[])
 {
+	if (argc < 2)
+	{
+		cout << "usage: floorplan input_file" << endl;
+		return 1;
+	}
 
-    NPE npe = init();
+    NPE npe = init(argv[1]);
 
     // Stockmeyer
     size_t min_area = 0x7fffffff;
@@ -30,18 +31,26 @@ int main()
             min_area = i->first*i->second;
             t = i;
         }
-    cout << "The minimum area floorplan is "
+	cout << "================Stockmeyer=================" << endl;
+    cout << "minimum area:\t"
          << t->first << "*" << t->second
          << "=" << min_area << endl;
 
     // Simulated Annealing
-    double freezingPoint = 1e-100;
+    double freezingPoint = 1e-10;
     double r = 0.85;
-    size_t k = 10; // k <- 5~10 suggested
+    size_t k = 10; // k = 5~10 suggested
+	cout << endl << "============Simulated Annealing============" << endl;
+	npe.getArea();
+	cout << "initial design:\t" << npe.getPostOrderStr()
+		<< "\tarea=" << (npe.getRoot())->data.first << "*" << (npe.getRoot())->data.second
+		<< "=" << (npe.getRoot())->data.first*(npe.getRoot())->data.second
+		<< endl;
     NPE optimized = SA(npe, freezingPoint, r, k);
-    cout << "The optimized floorplan is "
-         << optimized.getPostOrderStr() << endl;
-    cout << "Aera: "
+	
+    cout << "opt design:\t"
+         << optimized.getPostOrderStr();
+    cout << "\taera="
          << (optimized.getRoot())->data.first << "*" << (optimized.getRoot())->data.second
          << "=" << (optimized.getRoot())->data.first*(optimized.getRoot())->data.second
          << endl;
@@ -49,23 +58,21 @@ int main()
     return 0;
 }
 
-NPE init()
+NPE init(char *filename)
 {
     size_t n, w, h;
 	string str;
-	ifstream inFile("D:\\Sync\\Repository\\Floorplan\\testdata\\test2.in");
+	ifstream inFile(filename);
 
     // # of blocks
     inFile >> n;
 
     // size of blocks
-    //stringstream ss;
 	BlockSizeMap basicSize;
     for (size_t i=0; i<n; i++)
     {
 		inFile >> w >> h;
-        //ss << i+1;
-        basicSize[/*ss.str()*/to_string(i+1)] = BlockSize(w, h);
+        basicSize[to_string(i+1)] = BlockSize(w, h);
     }
 
     // initial design
@@ -156,10 +163,6 @@ NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
             case 3: NE = E.M3(startPos); break;
 			default:;
 			}
-
-            // selected kind of move not feasible
-            // if (!NE.getN()) continue;
-
             MT++;
             delta = NE.getArea() - E.getArea();
             if (delta<=0 || (double)rand()/RAND_MAX < exp(-delta/T))
@@ -168,8 +171,8 @@ NPE SA(NPE &npe, double freezingPoint, double r, size_t k)
                 E = NE;
 				if (E.getArea() < best.getArea())
 				{
-					cout << "better design: " << E.getPostOrderStr()
-						<< " area=" << (E.getRoot())->data.first << "*" << (E.getRoot())->data.second
+					cout << "better design:\t" << E.getPostOrderStr()
+						<< "\tarea=" << (E.getRoot())->data.first << "*" << (E.getRoot())->data.second
 						<< "=" << (E.getRoot())->data.first*(E.getRoot())->data.second
 						<< endl;
 					best = E;

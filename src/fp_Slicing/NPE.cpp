@@ -64,16 +64,6 @@ NPE& NPE::operator = (const NPE& i)
     return *this;
 }
 
-// BinNode<BlockSize>* NPE::getRoot() const
-// {
-//     return BinTree<BlockSize>::getRoot();
-// }
-//
-// vector<string> NPE::getPostOrder() const
-// {
-//     return BinTree<BlockSize>::getPostOrder();
-// }
-
 size_t NPE::getN() const
 {
     return BinTree<BlockSize>::getNumLeaf();
@@ -97,7 +87,6 @@ NPE NPE::M1(size_t startPos) const
     do {
         if (pos+1 < postOrder.size())
             if (isLeaf(postOrder[pos]) && isLeaf(postOrder[pos+1]))
-                //&& isLeaf(postOrder[pos+2]))
             {
                 modified = postOrder;
                 modified[pos] = postOrder[pos+1];
@@ -107,10 +96,7 @@ NPE NPE::M1(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    // if (modified.size())
     return NPE(modified, basicSize);
-    // else
-    //     return NPE();
 }
 
 NPE NPE::M2(size_t startPos) const
@@ -138,10 +124,7 @@ NPE NPE::M2(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    // if (modified.size())
     return NPE(modified, basicSize);
-    // else
-    //     return NPE();
 }
 
 NPE NPE::M3(size_t startPos) const
@@ -164,10 +147,7 @@ NPE NPE::M3(size_t startPos) const
         pos = (pos+1) % postOrder.size();
     } while(pos!=startPos);
 
-    // if (modified.size())
     return NPE(modified, basicSize);
-    // else
-    //     return NPE();
 }
 
 bool NPE::isLeaf(const string& str) const

@@ -49,7 +49,6 @@ BinTree<T>::BinTree(const BinTree<T> &orig)
 	root = copy(orig.root);
 }
 
-
 template<class T>
 BinNode<T>* BinTree<T>::copy(const BinNode<T> *src)
 {
